@@ -59,7 +59,7 @@ Hlavní komponenty:
 - Python 3.12 nebo novější  
 - Běžící databáze MySQL
 
-### Instalace knihoven (zatím příklad)
+### Instalace knihoven
 - pip install flask sqlalchemy mysql-connector-python
 
 
