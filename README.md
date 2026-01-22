@@ -141,6 +141,6 @@ Seznam částí převzatých z předchozích projektů:
 ---
 
 ## Changelog
-Viz soubor `CHANGELOG.md` vedený podle doporučení https://keepachangelog.com/cs/1.1.0/
+Viz soubor `CHANGELOG.md`.
 
 
