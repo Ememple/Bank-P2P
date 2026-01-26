@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bank System</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/stylesheet.css">
+</head>
+
+<body>
+<header>
+    <h1>Bank<span>Management System</span></h1>
+</header>
+<main>
+    <button id="create_account_btn" class="button">Open Account</button>
+
+    <table id="table">
+        <tr id="header">
+            <th>Account ID</th>
+            <th>Balance</th>
+            <th colspan="3">Action</th>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById("create_account_btn").onclick = async () => {
+            const response = await fetch("/create_account", { method: "POST" });
+            const result = await response.json();
+            if(result.success) {
+                refreshData();
+            } else {
+                alert("Error creating account: " + (result.error || "Unknown error"));
+            }
+        }
+
+        const header = document.getElementById("header")
+        const table = document.getElementById("table")
+
+        function createRow(account) {
+            let row = document.createElement("tr");
+            table.appendChild(row);
+
+            let idCol = row.appendChild(document.createElement("td"));
+            idCol.textContent = account.id;
+
+            let balCol = row.appendChild(document.createElement("td"));
+            balCol.textContent = account.balance + " CZK";
+
+            let depCol = row.appendChild(document.createElement("td"));
+
+            let btnDep = document.createElement("button");
+            btnDep.textContent = "Deposit";
+            btnDep.className = "button";
+            btnDep.style.width = "100%";
+            btnDep.style.minHeight = "30px";
+            btnDep.style.padding = "0";
+
+            btnDep.onclick = () => makeTransaction(account.id, 'deposit');
+            depCol.appendChild(btnDep);
+
+            let withCol = row.appendChild(document.createElement("td"));
+
+            let btnWith = document.createElement("button");
+            btnWith.textContent = "Withdraw";
+            btnWith.className = "button";
+            btnWith.style.width = "100%";
+            btnWith.style.minHeight = "30px";
+            btnWith.style.padding = "0";
+
+            btnWith.onclick = () => makeTransaction(account.id, 'withdraw');
+            withCol.appendChild(btnWith);
+
+            let deleteCol = row.appendChild(document.createElement("td"));
+
+            let btnDelete = document.createElement("button");
+            btnDelete.textContent = "Delete";
+            btnDelete.className = "button";
+            btnDelete.style.width = "100%";
+            btnDelete.style.minHeight = "30px";
+            btnDelete.style.padding = "0";
+            btnDelete.style.backgroundColor = "#ff4b4b";
+
+            btnDelete.onclick = () => deleteAccount(account.id);
+            deleteCol.appendChild(btnDelete);
+
+            return { element: row, idCol, balCol };
+        }
+
+        async function makeTransaction(id, action) {
+            let amount = prompt(`Enter amount to ${action}:`);
+            if (!amount) return;
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid positive number.");
+                return;
+            }
+
+            const response = await fetch("/transaction", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, amount: amount, action: action })
+            });
+
+            const result = await response.json();
+            if (!result.success) {
+                alert("Transaction failed: " + result.error);
+            }
+
+            refreshData();
+        }
+
+        async function deleteAccount(id) {
+            if (!confirm("Are you sure you want to delete account " + id + "?")) {
+                return;
+            }
+
+            const response = await fetch(`/delete/${id}`, { method: 'POST' });
+
+            if (response.ok) {
+                refreshData();
+            } else {
+                alert("Could not delete account. Ensure balance is 0");
+            }
+        }
+
+        async function refreshData() {
+            try {
+                const response = await fetch('/api/accounts');
+                const accounts = await response.json();
+
+                const existingRows = document.querySelectorAll("tr:not(#header)");
+                existingRows.forEach(row => row.remove());
+
+                accounts.forEach(acc => {
+                    createRow(acc);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        refreshData();
+        setInterval(refreshData, 2000);
+
+    </script>
+</main>
+<footer>
+    <a href="https://github.com/Ememple/Bank-P2P/tree/main">© 2026 P2P-Bank</a>
+</footer>
+</body>
+</html>

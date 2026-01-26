@@ -4,9 +4,17 @@ from src.Account import Account
 
 
 class MysqlStorage(StorageStrategy):
+    instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls.instance:
+            cls.instance = super(MysqlStorage, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self, db_config):
-        self.db_config = db_config
-        self._init_db()
+        if not hasattr(self, 'db_config'):
+            self.db_config = db_config
+            self._init_db()
 
     def _get_connection(self):
         return mysql.connector.connect(**self.db_config)
