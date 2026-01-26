@@ -7,5 +7,4 @@ class BankCode(Command):
     def execute(self, args: list[str]):
         if len(args) != 0:
             return "ERROR NO_ARGUMENTS_EXPECTED"
-
         return NotImplemented

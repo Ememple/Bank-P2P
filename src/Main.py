@@ -1,7 +1,10 @@
+import configparser
 from src.ReadConfig import ReadConfig
 from src.MySQLStorage import MysqlStorage
 from src.JsonStorage import JsonStorage
 from src.Bank import Bank
+from src.protocol.protocol_handler import ProtocolHandler
+from src.network.tcp_server import TCPServer
 
 
 def get_storage_strategy():
@@ -19,8 +22,17 @@ def get_storage_strategy():
 
 
 def main():
+    config = configparser.ConfigParser()
+    config.read('../res/config.ini')
+
     storage = get_storage_strategy()
     bank = Bank(storage)
+
+    timeout = config.get('tcp', 'timeout')
+    host = config.get('tcp', 'server_bind_ip')
+    port = config.get('tcp', 'tcp_port')
+    server = TCPServer(host=host, port=port, timeout=timeout, protocol_handler=ProtocolHandler)
+
     try:
         new_id = bank.create_account()
         print(f"Created Account ID: {new_id}")
@@ -36,6 +48,13 @@ def main():
 
     except Exception as e:
         print(f"An error occurred during testing: {e}")
+
+    try:
+        print(f"Starting TCP server on {host}:{port}")
+        server.start()
+    except KeyboardInterrupt:
+        print("Shutting down server...")
+        server.stop()
 
 
 if __name__ == "__main__":

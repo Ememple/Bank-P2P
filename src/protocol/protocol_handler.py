@@ -17,5 +17,5 @@ class ProtocolHandler:
         except KeyError:
             response = "ERROR, UNKNOWN_COMMAND"
         except Exception as e:
-            response = f"ERR {e}"
+            response = f"ERROR {e}"
         return response

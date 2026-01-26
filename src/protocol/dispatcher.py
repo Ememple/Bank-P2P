@@ -21,7 +21,7 @@ class Dispatcher:
             "BC": BankCode(bank),
             "BA": BankTotal(bank),
             "BN": BankClients(bank),
-            "RP": RobberyPlan(bank),
+            "RP": RobberyPlan(bank)
         }
 
     def dispatch(self, code: str, args: list[str]):

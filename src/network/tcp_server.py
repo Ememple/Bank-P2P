@@ -1,17 +1,14 @@
-import configparser
 import socket
 import threading
 from src.network.client_handler import ClientHandler
 
 class TCPServer:
-    def __init__(self, protocol_handler):
-        config = configparser.ConfigParser()
-        config.read('../res/config.ini')
-        self.timeout = config.get('tcp', 'timeout')
-        self.host = config.get('tcp', 'server_bind_ip')
-        self.port = config.get('tcp', 'tcp_port')
+    def __init__(self, host, port, timeout, protocol_handler):
         self.protocol_handler = protocol_handler
         self.client_handler = ClientHandler
+        self.timeout = timeout
+        self.host = host
+        self.port = port
         self.server_socket = None
         self.is_running = False
 
@@ -26,7 +23,7 @@ class TCPServer:
             try:
                 conn, address = self.server_socket.accept()
                 threading.Thread(
-                    target=ClientHandler,
+                    target=self.client_handler,
                     args=(conn, self.protocol_handler, self.timeout),
                     daemon=True
                 ).start()

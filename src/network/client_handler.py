@@ -5,13 +5,15 @@ class ClientHandler:
         self.conn = conn
         self.addr = addr
         self.protocol_handler = protocol_handler
-        self.timeout = timeout
         self.is_active = True
-        self.conn.settimeout(self.timeout)
+        self.conn.settimeout(timeout)
+
 
     def run(self):
         try:
             self.conn.sendall(b"CONNECTED TO BANK\n")
+            self.send_menu()
+
             while self.is_active:
                 try:
                     data = self.conn.recv(1024)
@@ -22,18 +24,33 @@ class ClientHandler:
                     break
 
                 line = data.decode("utf-8").strip()
+                if line.upper() == "QUIT":
+                    break
+
                 if not line:
                     continue
 
-                try:
-                    response = self.protocol_handler.handle(line)
-                except Exception as e:
-                    response = f"ERR {e}"
-
+                response = self.protocol_handler.handle(line)
                 self.conn.sendall((response + "\n").encode("utf-8"))
-        except Exception as e:
-            print(e)
         finally:
             self.conn.close()
-            print("closing connection with client {}".format(self.addr))
+
+
+    def send_menu(self):
+            menu = """
+                Welcome to the P2P Bank!
+                Available commands:
+            
+                AC <account_id>          - Create account
+                AD <account_id> <amount> - Deposit
+                AW <account_id> <amount> - Withdraw
+                AB <account_id>          - Check balance
+                AR <account_id>          - Remove account
+                BC                       - Bank code
+                BA                       - Bank total amount
+                BN                       - Number of clients
+                RP <number>              - Robbery plan (local only)
+                QUIT                     - Disconnect
+            """
+            self.conn.sendall(menu.encode("utf-8"))
 
