@@ -3,7 +3,6 @@ from src.ReadConfig import ReadConfig
 from src.MySQLStorage import MysqlStorage
 from src.JsonStorage import JsonStorage
 from src.Bank import Bank
-from src.protocol.protocol_handler import ProtocolHandler
 from src.network.tcp_server import TCPServer
 
 
@@ -31,7 +30,7 @@ def main():
     timeout = config.get('tcp', 'timeout')
     host = config.get('tcp', 'server_bind_ip')
     port = config.get('tcp', 'tcp_port')
-    server = TCPServer(host=host, port=port, timeout=timeout, protocol_handler=ProtocolHandler)
+    server = TCPServer(host=host, port=port, timeout=timeout, bank=bank)
 
     try:
         new_id = bank.create_account()

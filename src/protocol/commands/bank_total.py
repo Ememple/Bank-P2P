@@ -9,4 +9,8 @@ class BankTotal(Command):
             return "ERROR NO_ARGUMENTS_EXPECTED"
 
         total = self.bank.get_total_balance()
+
+        if not total and total != 0:
+            return "ERROR TOTAL BALANCE"
+
         return str(total)
