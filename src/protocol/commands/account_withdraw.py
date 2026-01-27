@@ -6,20 +6,20 @@ class AccountWithdraw(Command):
 
     def execute(self, args: list[str]):
         if len(args) != 2:
-            return "ERROR MISSING_ARGUMENTS"
+            return "ER MISSING ARGUMENTS"
 
         try:
             account_id = int(args[0])
         except ValueError:
-            return "ERROR INVALID_ACCOUNT_ID"
+            return "ER INVALID ACCOUNT ID"
 
         try:
             amount = int(args[1])
         except ValueError:
-            return "ERROR INVALID_AMOUNT"
+            return "ER INVALID AMOUNT"
 
         if amount <= 0:
-            return "ERROR AMOUNT_MUST_BE_POSITIVE"
+            return "ER AMOUNT MUST BE POSITIVE"
 
         self.bank.withdraw(account_id, amount)
-        return f"OK WITHDREW {amount} FROM ACCOUNT {account_id}"
+        return "AW\r"

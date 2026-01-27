@@ -6,7 +6,7 @@ class BankClients(Command):
 
     def execute(self, args: list[str]) -> str:
         if len(args) != 0:
-            return "ERROR NO_ARGUMENTS_EXPECTED"
+            return "ER NO ARGUMENTS EXPECTED"
 
         count = self.bank.get_accounts_count()
-        return str(count)
+        return f"BN {count}\r"

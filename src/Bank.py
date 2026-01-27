@@ -1,4 +1,5 @@
 import random
+import socket
 from src.StorageStrategy import StorageStrategy
 from src.Account import Account
 
@@ -6,6 +7,11 @@ from src.Account import Account
 class Bank:
     def __init__(self, repository: StorageStrategy):
         self.repo = repository
+
+    def bank_code(self) :
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+        return ip_address
 
     def create_account(self) :
         while True:

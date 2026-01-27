@@ -6,5 +6,5 @@ class BankCode(Command):
 
     def execute(self, args: list[str]):
         if len(args) != 0:
-            return "ERROR NO_ARGUMENTS_EXPECTED"
-        return NotImplemented
+            return "ER NO ARGUMENTS EXPECTED"
+        return f"BC {self.bank.bank_code()}\r"

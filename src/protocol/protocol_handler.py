@@ -6,7 +6,7 @@ class ProtocolHandler:
     def handle(self, line: str):
         line = line.strip()
         if not line:
-            return "ERROR, EMPTY_COMMAND"
+            return "ER EMPTY COMMAND"
 
         parts = line.split()
         command_code = parts[0].upper()
@@ -15,7 +15,7 @@ class ProtocolHandler:
         try:
             response = self.dispatcher.dispatch(command_code, args)
         except KeyError:
-            response = "ERROR, UNKNOWN_COMMAND"
+            response = "ER UNKNOWN_COMMAND"
         except Exception as e:
-            response = f"ERROR {e}"
+            response = f"ER {e}"
         return response

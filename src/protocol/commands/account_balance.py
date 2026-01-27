@@ -6,14 +6,14 @@ class AccountBalance(Command):
 
     def execute(self, args: list[str]):
         if len(args) != 1:
-            return "ERROR MISSING_ACCOUNT_ID"
+            return "ER MISSING ACCOUNT ID"
         try:
             account_id = int(args[0])
         except ValueError:
-            return "ERROR INVALID_ACCOUNT_ID"
+            return "ER INVALID ACCOUNT ID"
 
         balance = self.bank.get_balance(account_id)
         if not balance and balance != 0:
-            return "ERROR BALANCE"
+            return "ER INVALID BALANCE"
 
-        return str(balance)
+        return f"AB {balance}\r"
