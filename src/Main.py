@@ -8,7 +8,7 @@ from src.network.tcp_server import TCPServer
 
 def get_storage_strategy():
     try:
-        config = ReadConfig.read_config()
+        config = ReadConfig.read_database_config()
 
         storage = MysqlStorage(config)
         print("Using Database storage")

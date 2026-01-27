@@ -3,7 +3,7 @@ import configparser
 class ReadConfig:
 
     @staticmethod
-    def read_config():
+    def read_database_config():
         config = configparser.ConfigParser()
         config.read('../res/config.ini')
 
@@ -19,6 +19,21 @@ class ReadConfig:
             'database': db_name,
             'user': db_user,
             'password': db_password
+        }
+
+        return config_values
+
+    @staticmethod
+    def read_tcp_config():
+        config = configparser.ConfigParser()
+        config.read('../res/config.ini')
+
+        timeout = config.get('tcp', 'timeout')
+        tcp_port = config.get('tcp', 'tcp_port')
+
+        config_values = {
+            'timeout': timeout,
+            'tcp_port': tcp_port
         }
 
         return config_values
