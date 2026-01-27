@@ -13,7 +13,7 @@ class AccountBalance(Command):
             return "ERROR INVALID_ACCOUNT_ID"
 
         balance = self.bank.get_balance(account_id)
-        if not balance:
+        if not balance and balance != 0:
             return "ERROR BALANCE"
 
         return str(balance)

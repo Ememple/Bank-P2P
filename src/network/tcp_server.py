@@ -1,16 +1,22 @@
 import socket
 import threading
 from src.network.client_handler import ClientHandler
+from src.protocol.dispatcher import Dispatcher
+from src.protocol.protocol_handler import ProtocolHandler
+
 
 class TCPServer:
-    def __init__(self, host, port, timeout, protocol_handler):
-        self.protocol_handler = protocol_handler
+    def __init__(self, host, port, timeout, bank):
         self.client_handler = ClientHandler
-        self.timeout = timeout
+        self.timeout = int(timeout)
         self.host = host
-        self.port = port
+        self.port = int(port)
         self.server_socket = None
         self.is_running = False
+
+        self.bank = bank
+        self.dispatcher = Dispatcher(self.bank)
+        self.protocol_handler = ProtocolHandler(self.dispatcher)
 
     def start(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,14 +27,14 @@ class TCPServer:
 
         while self.is_running:
             try:
-                conn, address = self.server_socket.accept()
-                threading.Thread(
-                    target=self.client_handler,
-                    args=(conn, self.protocol_handler, self.timeout),
-                    daemon=True
-                ).start()
+                connection, address = self.server_socket.accept()
+                threading.Thread(target=self._redirect_to_handler, args=(connection, address), daemon=True).start()
             except Exception as e:
                 print(e)
+
+    def _redirect_to_handler(self, conn, address):
+        handler = (self.client_handler(conn, address, self.timeout, self.protocol_handler))
+        handler.run()
 
     def stop(self):
         self.is_running = False

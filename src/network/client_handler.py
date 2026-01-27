@@ -1,13 +1,12 @@
 import socket
 
 class ClientHandler:
-    def __init__(self, conn: socket.socket, addr, protocol_handler, timeout):
+    def __init__(self, conn: socket.socket, addr, timeout, protocol_handler):
         self.conn = conn
         self.addr = addr
         self.protocol_handler = protocol_handler
         self.is_active = True
         self.conn.settimeout(timeout)
-
 
     def run(self):
         try:
@@ -30,27 +29,30 @@ class ClientHandler:
                 if not line:
                     continue
 
-                response = self.protocol_handler.handle(line)
+                response = self.protocol_handler.handle(str(line))
                 self.conn.sendall((response + "\n").encode("utf-8"))
         finally:
             self.conn.close()
 
 
     def send_menu(self):
-            menu = """
-                Welcome to the P2P Bank!
-                Available commands:
-            
-                AC <account_id>          - Create account
-                AD <account_id> <amount> - Deposit
-                AW <account_id> <amount> - Withdraw
-                AB <account_id>          - Check balance
-                AR <account_id>          - Remove account
-                BC                       - Bank code
-                BA                       - Bank total amount
-                BN                       - Number of clients
-                RP <number>              - Robbery plan (local only)
-                QUIT                     - Disconnect
-            """
-            self.conn.sendall(menu.encode("utf-8"))
+        menu_lines = [
+            "Welcome to the P2P Bank!",
+            "",
+            "Available commands:",
+            "-----------------------------------------------------",
+            "AC                       - Create account",
+            "AD <account_id> <amount> - Deposit",
+            "AW <account_id> <amount> - Withdraw",
+            "AB <account_id>          - Check balance",
+            "AR <account_id>          - Remove account",
+            "BC                       - Bank code",
+            "BA                       - Bank total amount",
+            "BN                       - Number of clients",
+            "RP <number>              - Robbery plan (local only), (not implemented yet)",
+            "",
+            "QUIT                     - Disconnect"
+        ]
+        menu = "\r\n".join(menu_lines) + "\r\n"
+        self.conn.sendall(menu.encode("utf-8"))
 
