@@ -1,4 +1,4 @@
-import configparser
+import socket
 from src.ReadConfig import ReadConfig
 from src.MySQLStorage import MysqlStorage
 from src.JsonStorage import JsonStorage
@@ -21,35 +21,21 @@ def get_storage_strategy():
 
 
 def main():
-    config = configparser.ConfigParser()
-    config.read('../res/config.ini')
-
     storage = get_storage_strategy()
     bank = Bank(storage)
 
-    timeout = config.get('tcp', 'timeout')
-    host = config.get('tcp', 'server_bind_ip')
-    port = config.get('tcp', 'tcp_port')
-    server = TCPServer(host=host, port=port, timeout=timeout, bank=bank)
+    tcp_config = ReadConfig.read_tcp_config()
+
+    timeout = tcp_config.get("timeout",5)
+    tcp_port = tcp_config.get("tcp_port",65525)
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    if not 65525 <= int(tcp_port)<= 65535:
+        tcp_port = 65525
+    server = TCPServer(host=ip_address, port=tcp_port, timeout=timeout, bank=bank)
 
     try:
-        new_id = bank.create_account()
-        print(f"Created Account ID: {new_id}")
-
-        bank.deposit(new_id, 1000)
-        print(f"Deposited 1000, new balance: {bank.get_balance(new_id)}")
-
-        bank.withdraw(new_id, 200)
-        print(f"Withdrew 200, new balance: {bank.get_balance(new_id)}")
-
-        print(f"Total bank balance: {bank.get_total_balance()}")
-        print(f"Total clients: {bank.get_accounts_count()}")
-
-    except Exception as e:
-        print(f"An error occurred during testing: {e}")
-
-    try:
-        print(f"Starting TCP server on {host}:{port}")
+        print(f"Starting TCP server on {ip_address}:{tcp_port}")
         server.start()
     except KeyboardInterrupt:
         print("Shutting down server...")
