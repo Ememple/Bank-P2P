@@ -1,4 +1,3 @@
-from src.ActionLogger import ActionLogger
 from src.protocol.commands.account_balance import AccountBalance
 from src.protocol.commands.account_create import AccountCreate
 from src.protocol.commands.account_deposit import AccountDeposit
@@ -8,12 +7,13 @@ from src.protocol.commands.bank_clients import BankClients
 from src.protocol.commands.bank_code import BankCode
 from src.protocol.commands.bank_total import BankTotal
 from src.protocol.commands.robbery_plan import RobberyPlan
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Dispatcher:
     def __init__(self, bank):
         self.bank = bank
-        self.logger = ActionLogger()
         self.commands = {
             "AC": AccountCreate(bank),
             "AD": AccountDeposit(bank),
@@ -28,6 +28,6 @@ class Dispatcher:
 
     def dispatch(self, code: str, args: list[str]):
         if code not in self.commands:
+            logger.warning(f"unknown command: {code} launched by client")
             raise KeyError(code)
-        self.logger.log(code, args)
         return self.commands[code].execute(args)

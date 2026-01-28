@@ -1,4 +1,7 @@
 import configparser
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ReadConfig:
 
@@ -30,6 +33,10 @@ class ReadConfig:
 
         timeout = config.get('tcp', 'timeout')
         tcp_port = config.get('tcp', 'tcp_port')
+
+        if not 65525 <= int(tcp_port) <= 65535:
+            logger.error('tcp port must be in range [65525-65535]')
+            tcp_port = 65525
 
         config_values = {
             'timeout': timeout,

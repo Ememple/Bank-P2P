@@ -1,4 +1,7 @@
 import socket
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ClientHandler:
     def __init__(self, conn: socket.socket, addr, timeout, protocol_handler):
@@ -10,8 +13,8 @@ class ClientHandler:
 
     def run(self):
         try:
-            self.conn.sendall(b"CONNECTED TO BANK\n")
-            self.send_menu()
+            #self.conn.sendall(b"CONNECTED TO BANK\n")
+            #self.send_menu()
 
             while self.is_active:
                 try:
@@ -19,11 +22,13 @@ class ClientHandler:
                     if not data:
                         break
                 except socket.timeout:
+                    logger.error(f"client {self.addr} Timed out")
                     print("closing connection with client {} client timed out".format(self.addr))
                     break
 
                 line = data.decode("utf-8").strip()
                 if line.upper() == "QUIT":
+                    logger.info(f"client {self.addr} has closed the connection")
                     break
 
                 if not line:
@@ -32,6 +37,7 @@ class ClientHandler:
                 response = self.protocol_handler.handle(str(line))
                 self.conn.sendall((response + "\n").encode("utf-8"))
         finally:
+            logger.info("closing connection with client {} client timed out".format(self.addr))
             self.conn.close()
 
 

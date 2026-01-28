@@ -1,3 +1,6 @@
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ProtocolHandler:
     def __init__(self, dispatcher):
@@ -6,6 +9,7 @@ class ProtocolHandler:
     def handle(self, line: str):
         line = line.strip()
         if not line:
+            logger.warning("No line received from client")
             return "ER EMPTY COMMAND"
 
         parts = line.split()
@@ -15,7 +19,9 @@ class ProtocolHandler:
         try:
             response = self.dispatcher.dispatch(command_code, args)
         except KeyError:
+            logger.error("key interruption error")
             response = "ER UNKNOWN_COMMAND"
         except Exception as e:
+            logger.error(f"error: {e}")
             response = f"ER {e}"
-        return response
+        return response + "\r\n"

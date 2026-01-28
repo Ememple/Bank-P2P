@@ -1,8 +1,10 @@
-# src/JsonRepository.py
 import json
 import os
 from src.StorageStrategy import StorageStrategy
 from src.Account import Account
+import logging
+
+logger = logging.getLogger(__name__)
 
 class JsonStorage(StorageStrategy):
     def __init__(self):
@@ -31,19 +33,23 @@ class JsonStorage(StorageStrategy):
             json.dump(export_data, f, indent=4)
 
     def save(self, account: Account):
+        logger.info("Saving data to JSON file")
         data = self.load()
         data[account.id] = account
         self.save_file(data)
 
     def get(self, id: int):
+        logger.info("Loading data from JSON file")
         data = self.load()
         return data.get(id)
 
     def delete(self, id: int):
+        logger.info("deleting data from JSON file")
         data = self.load()
         if id in data:
             del data[id]
             self.save_file(data)
 
     def get_all(self):
+        logger.info("Getting all values from JSON file")
         return list(self.load().values())

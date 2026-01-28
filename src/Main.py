@@ -4,7 +4,14 @@ from src.MySQLStorage import MysqlStorage
 from src.JsonStorage import JsonStorage
 from src.Bank import Bank
 from src.network.tcp_server import TCPServer
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    filename="actions_log.log",
+    filemode="a",
+)
 
 def get_storage_strategy():
     try:
@@ -30,8 +37,6 @@ def main():
     tcp_port = tcp_config.get("tcp_port",65525)
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
-    if not 65525 <= int(tcp_port)<= 65535:
-        tcp_port = 65525
     server = TCPServer(host=ip_address, port=tcp_port, timeout=timeout, bank=bank)
 
     try:
