@@ -1,14 +1,14 @@
 import json
 import os
-from src.StorageStrategy import StorageStrategy
-from src.Account import Account
+from src.storage.StorageStrategy import StorageStrategy
+from src.services.Account import Account
 import logging
 
 logger = logging.getLogger(__name__)
 
 class JsonStorage(StorageStrategy):
     def __init__(self):
-        self.filepath = "../res/data.json"
+        self.filepath = "../../res/data.json"
         if not os.path.exists(self.filepath):
             with open(self.filepath, 'w') as f:
                 json.dump({}, f)

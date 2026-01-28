@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.Account import Account
+from src.services.Account import Account
 
 class StorageStrategy(ABC):
     @abstractmethod

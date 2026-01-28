@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 
-from ReadConfig import ReadConfig
-from MySQLStorage import MysqlStorage
-from JsonStorage import JsonStorage
-from Bank import Bank
+from src.services.ReadConfig import ReadConfig
+from src.storage.MySQLStorage import MysqlStorage
+from src.storage.JsonStorage import JsonStorage
+from src.services.Bank import Bank
 
 app = Flask(__name__, static_folder='static')
 

@@ -1,8 +1,8 @@
 import socket
-from src.ReadConfig import ReadConfig
-from src.MySQLStorage import MysqlStorage
-from src.JsonStorage import JsonStorage
-from src.Bank import Bank
+from src.services.ReadConfig import ReadConfig
+from src.storage.MySQLStorage import MysqlStorage
+from src.storage.JsonStorage import JsonStorage
+from src.services.Bank import Bank
 from src.network.tcp_server import TCPServer
 import logging
 
@@ -11,6 +11,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     filename="actions_log.log",
     filemode="a",
+    encoding="utf-8",
 )
 
 def get_storage_strategy():

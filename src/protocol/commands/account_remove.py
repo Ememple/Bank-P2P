@@ -1,5 +1,5 @@
-from src.ReadConfig import ReadConfig
-from src.TCP_Client import TCP_Client
+from src.services.ReadConfig import ReadConfig
+from src.network.tcp_client import TCP_Client
 from src.protocol.commands.base import Command
 import logging
 

@@ -1,0 +1,12 @@
+2026-01-28 20:59:16,719 [INFO] src.network.tcp_server: Starting TCP server
+2026-01-28 20:59:25,269 [INFO] src.network.tcp_server: client ('192.168.2.119', 51028) has connected
+2026-01-28 20:59:27,218 [INFO] src.protocol.commands.account_create: service AC started
+2026-01-28 20:59:27,218 [INFO] src.JsonStorage: Loading data from JSON file
+2026-01-28 20:59:27,218 [INFO] src.JsonStorage: Saving data to JSON file
+2026-01-28 20:59:27,220 [INFO] src.protocol.commands.account_create: service AC ended successfully
+2026-01-28 20:59:29,157 [WARNING] src.protocol.dispatcher: unknown command: ERF launched by client
+2026-01-28 20:59:29,165 [ERROR] src.protocol.protocol_handler: key interruption error
+2026-01-28 20:59:30,958 [INFO] src.protocol.commands.account_create: service AC started
+2026-01-28 20:59:30,959 [ERROR] src.protocol.commands.account_create: Account creation command requires exactly no arguments
+2026-01-28 20:59:33,699 [INFO] src.network.client_handler: client ('192.168.2.119', 51028) has closed the connection
+2026-01-28 20:59:33,699 [INFO] src.network.client_handler: closing connection with client ('192.168.2.119', 51028) client timed out
