@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import os
 
 from src.services.ReadConfig import ReadConfig
 from src.storage.MySQLStorage import MysqlStorage
@@ -7,15 +8,19 @@ from src.services.Bank import Bank
 
 app = Flask(__name__, static_folder='static')
 
-def get_bank_service():
-    try:
-        config = ReadConfig.read_config()
-        storage = MysqlStorage(config)
-    except Exception:
-        storage = JsonStorage()
-    return Bank(storage)
+tcp_server_instance = None
+bank = None
 
-bank = get_bank_service()
+if bank is None:
+    try:
+        try:
+            config = ReadConfig.read_database_config()
+            storage = MysqlStorage(config)
+        except:
+            storage = JsonStorage()
+        bank = Bank(storage)
+    except Exception:
+        print("Couldn't connect to bank")
 
 @app.route('/')
 def index():
@@ -51,5 +56,15 @@ def api_transaction():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    if tcp_server_instance:
+        try:
+            tcp_server_instance.stop()
+        except Exception as e:
+            print(f"Error stopping TCP server: {e}")
+
+    os._exit(0)
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=8080)
