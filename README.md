@@ -1,8 +1,8 @@
-# P2P Bank – HACKER Bank Node
+# Bank-P2P
 
 Autoři:  
-- Šimon Juda Hloška  
-- Jan Čihař  
+- Jan Čihař 
+- Šimon Juda Hloska  
 
 ---
 
@@ -15,16 +15,15 @@ Autoři:
   - [Instalace knihoven](#instalace-knihoven)
   - [Konfigurace](#konfigurace)
   - [Spuštění serveru](#spuštění-serveru)
-- [Ovládání (protokol)](#ovládání-protokol)
+- [Ovládání](#ovládání)
 - [Perzistence dat](#perzistence-dat)
 - [Logování](#logování)
-- [Monitoring UI](#monitoring-ui)
-- [Znovupoužitý kód](#znovupoužitý-kód)
+- [UI](#ui)
 - [Changelog](#changelog)
 ---
 
 ## Popis projektu
-Projekt implementuje bankovní uzel (node) v architektuře **P2P (peer-to-peer)**.
+Projekt implementuje bankovní uzel (node) v architektuře P2P.
 Tento node reprezentuje jednu banku, která umožňuje zakládání účtů, vklady, výběry, zjištění zůstatku a spolupráci s ostatními bankami v síti.
 
 
@@ -33,10 +32,9 @@ Tento node reprezentuje jednu banku, která umožňuje zakládání účtů, vkl
 ## Použité technologie
 - Python 3.12+  
 - TCP/IP socket komunikace (PuTTY)
-- Flask – webový monitoring (Backend)
-- MySQL – perzistence účtů  
-- SQLAlchemy – ORM a připojení k databázi  
-- HTML / CSS / JavaScript – UI monitoringu (frontend) 
+- Flask – web server
+- MySQL – ukládání účtů
+- HTML / CSS / JavaScript – UI
 
 ---
 
@@ -46,8 +44,8 @@ Aplikace je navržena podle návrhového vzoru **Strategy** pro práci s perzist
 Hlavní komponenty:
 - `Bank` – hlavní logika banky a zpracování příkazů  
 - `StorageStrategy` – rozhraní pro ukládání dat  
-- `JsonStorageStrategy` – záložní ukládání do souboru  
-- `MySqlStorageStrategy` – primární ukládání do databáze MySQL  
+- `JsonStorageStrategy` – ukládání do souboru  
+- `MySqlStorageStrategy` – ukládání do databáze MySQL  
 - `TCPServer` – TCP server pro P2P komunikaci  
 - `WebApp` – webové rozhraní pro monitoring a bezpečné vypnutí nodu  
 
@@ -60,42 +58,57 @@ Hlavní komponenty:
 - Běžící databáze MySQL
 
 ### Instalace knihoven
-- pip install flask sqlalchemy mysql-connector-python
-
+  ```
+  pip install flask mysql-connector-python
+  ```
 
 ### Konfigurace
 V konfiguračním souboru lze nastavit:
-- IP adresu banky
-- port (rozsah 65525–65535) otázka zda dávat do konfiguráku tbh
-- timeout (výchozí 5 sekund)
-- přihlašovací údaje k databázi MySQL
+
+```
+[database]
+db_host=localhost
+db_port=3306
+db_name=bank
+db_user=root
+db_password=password
+
+[tcp]
+timeout=120
+tcp_port=65525
+```
 
 ### Spuštění serveru
-- python main.py
-
+Projekt je možné spustit v IDE a nebo přes příkazovou řádku
+```
+# Musíte být ve složce Bank-P2P
+python /src/Main.py
+```
 
 TCP server začne naslouchat na nastaveném portu.  
 Klient se připojuje pomocí **PuTTY**.
 
 Webové rozhraní je dostupné na:
-http://<ip>:<web_port>
+http://\<ip>:<web_port>
 
 
 ---
 
-## Ovládání (protokol)
+## Ovládání
 
 Aplikace podporuje pouze povolené příkazy:
 
-- `BC` – Bank code  
-- `AC` – Account create  
-- `AD` – Account deposit  
-- `AW` – Account withdrawal  
-- `AB` – Account balance  
-- `AR` – Account remove  
-- `BA` – Bank total amount  
-- `BN` – Bank number of clients  
-- `RP <number>` – Robbery Plan (pouze lokální server)
+| Název | Kód | Volání | Odpověď při úspěchu | Odpověď při chybě |
+| :--- | :--- | :--- | :--- | :--- |
+| Bank code | BC | BC | BC \<ip\> | ER \<message\> |
+| Account create | AC | AC | AC \<account\>/\<ip\> | ER \<message\> |
+| Account deposit | AD | AD \<account\>/\<ip\> \<number\> | AD | ER \<message\> |
+| Account withdrawal | AW | AW \<account\>/\<ip\> \<number\> | AW | ER \<message\> |
+| Account balance | AB | AB \<account\>/\<ip\> | AB \<number\> | ER \<message\> |
+| Account remove | AR | AR \<account\>/\<ip\> | AR | ER \<message\> |
+| Bank (total) amount | BA | BA | BA \<number\> | ER \<message\> |
+| Bank number of clients | BN | BN | BN \<number\> | ER \<message\> |
+
 
 Komunikace probíhá pomocí TCP, zprávy jsou jednořádkové v UTF-8.
 
@@ -119,24 +132,10 @@ Logy slouží pro zpětnou kontrolu provozu sítě.
 
 ---
 
-## Monitoring UI
-Součástí projektu je jednoduché webové rozhraní:
-- přehled stavu nodu,  
-- základní statistiky,  
-- možnost bezpečného vypnutí aplikace.
-
-Rozhraní není konzolové a splňuje požadavky zadání.
-
----
-
-## Znovupoužitý kód
-Seznam částí převzatých z předchozích projektů:
-
-- [Název projektu] – TCP server skeleton  
-  Odkaz: <DOPLNIT ODKAZ NA REPOZITÁŘ>
-
-- [Název projektu] – logovací modul  
-  Odkaz: <DOPLNIT ODKAZ NA REPOZITÁŘ>
+## UI
+Součástí projektu je webové rozhraní:
+- zobrazení účtů a obecné statistiky  
+- možnost bezpečného vypnutí aplikace
 
 ---
 
