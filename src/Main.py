@@ -1,15 +1,16 @@
-import socket, Server, threading
+import socket, threading
 from src.services.ReadConfig import ReadConfig
 from src.storage.MySQLStorage import MysqlStorage
 from src.storage.JsonStorage import JsonStorage
 from src.services.Bank import Bank
 from src.network.tcp_server import TCPServer
+from src import Server
 import logging
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    filename="actions_log.log",
+    filename="../res/actions.log",
     filemode="a",
     encoding="utf-8",
 )
@@ -28,6 +29,7 @@ def get_storage_strategy():
         return JsonStorage()
 
 def run_web_server():
+    print("Web running on http://127.0.0.1:8080")
     Server.app.run(port=8080, debug=False, use_reloader=False)
 
 def main():
