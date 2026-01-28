@@ -14,9 +14,13 @@ class MysqlStorage(StorageStrategy):
         return cls.instance
 
     def __init__(self, db_config):
-        if not hasattr(self, 'db_config'):
+        if not getattr(self, 'initialized', False):
             self.db_config = db_config
-            self._init_db()
+            try:
+                self._init_db()
+                self.initialized = True
+            except Exception:
+                raise
 
     def _get_connection(self):
         logger.info('Connecting to MySQL DB')

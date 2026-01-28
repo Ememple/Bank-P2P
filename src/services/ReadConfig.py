@@ -42,5 +42,4 @@ class ReadConfig:
             'timeout': timeout,
             'tcp_port': tcp_port
         }
-
         return config_values
