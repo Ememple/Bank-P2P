@@ -27,3 +27,4 @@
 
 ## 2026-01-28 - Jan Čihař
 * Upravení webové stránky a předělání spouštění serveru
+* Úprava README.md a přidání dokumentace
