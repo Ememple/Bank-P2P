@@ -27,3 +27,7 @@
 2026-01-28 21:27:49,271 [ERROR] src.protocol.commands.account_create: Account creation command requires exactly no arguments
 2026-01-28 21:27:52,749 [INFO] src.network.client_handler: client ('192.168.2.119', 57598) has closed the connection
 2026-01-28 21:27:52,750 [INFO] src.network.client_handler: closing connection with client ('192.168.2.119', 57598) client timed out
+2026-01-28 21:34:00,771 [INFO] src.network.tcp_server: Starting TCP server
+2026-01-28 21:34:00,780 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2026-01-28 21:34:00,781 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
