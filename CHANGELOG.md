@@ -24,3 +24,6 @@
 
 ## 2026-01-28 - Šimon Hloska
 * Přidání locku do metod pro operace v bance
+
+## 2026-01-28 - Jan Čihař
+* Upravení webové stránky a předělání spouštění serveru
