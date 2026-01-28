@@ -24,3 +24,8 @@
 
 ## 2026-01-28 - Šimon Hloska
 * Přidání locku do metod pro operace v bance
+
+## 2026-01-28 - Šimon Hloska
+* přidání  plně funkčního nativního logu
+* přidání souboru requirements.txt
+* přestavění struktury projektu pro systém a přehlednost
