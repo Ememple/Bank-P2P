@@ -1,4 +1,4 @@
-import socket
+import socket, Server, threading
 from src.ReadConfig import ReadConfig
 from src.MySQLStorage import MysqlStorage
 from src.JsonStorage import JsonStorage
@@ -15,14 +15,20 @@ def get_storage_strategy():
         return storage
 
     except Exception as e:
-        print(f"Database connection failed ({e})")
+        print(f"Database connection failed: {e}")
         print("Using JSON storage")
         return JsonStorage()
 
+def run_web_server():
+    Server.app.run(port=8080, debug=False, use_reloader=False)
 
 def main():
     storage = get_storage_strategy()
     bank = Bank(storage)
+    Server.bank = bank
+
+    web_thread = threading.Thread(target=run_web_server)
+    web_thread.start()
 
     tcp_config = ReadConfig.read_tcp_config()
 
@@ -33,12 +39,13 @@ def main():
     if not 65525 <= int(tcp_port)<= 65535:
         tcp_port = 65525
     server = TCPServer(host=ip_address, port=tcp_port, timeout=timeout, bank=bank)
+    Server.tcp_server_instance = server
 
     try:
         print(f"Starting TCP server on {ip_address}:{tcp_port}")
         server.start()
     except KeyboardInterrupt:
-        print("Shutting down server...")
+        print("Server shutdown")
         server.stop()
 
 
