@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class JsonStorage(StorageStrategy):
     def __init__(self):
-        self.filepath = "../../res/data.json"
+        self.filepath = "../res/data.json"
         if not os.path.exists(self.filepath):
             with open(self.filepath, 'w') as f:
                 json.dump({}, f)

@@ -8,7 +8,7 @@ class ReadConfig:
     @staticmethod
     def read_database_config():
         config = configparser.ConfigParser()
-        config.read('../res/config.ini')
+        config.read('../../res/config.ini')
 
         db_host = config.get('database', 'db_host')
         db_port = config.get('database', 'db_port')
