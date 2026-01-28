@@ -1,8 +1,8 @@
 import random
 import socket
 import threading
-from src.StorageStrategy import StorageStrategy
-from src.Account import Account
+from src.storage.StorageStrategy import StorageStrategy
+from src.services.Account import Account
 
 
 class Bank:
