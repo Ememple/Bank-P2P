@@ -18,3 +18,6 @@
 
 ## 2026-01-27 - Šimon Hloska
 * oprava TCP configu, způsob volání metod a přeposílání instancí mezi třídami
+
+## 2026-01-28 - Šimon Hloska
+* Přidání locku do metod pro operace v bance
